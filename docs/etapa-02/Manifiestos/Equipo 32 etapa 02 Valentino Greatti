@@ -1,0 +1,27 @@
+Contribución individual – Etapa 02
+
+Equipo: 32
+Integrante: Valentino Greatti
+DNI: 46.843.191
+Fecha: 2026-09-23
+Materia: Base de Datos
+
+ Aporte realizado 
+
+Durante esta etapa participé en la revisión y ajuste del modelo de la base de datos, principalmente en las relaciones entre Orden y Artículo. Analicé cómo identificar correctamente los registros y cómo representar las reglas de negocio mediante las claves y restricciones de las tablas.
+
+ Decisiones en las que participé
+
+Participé en la decisión relacionada con la identificación de los artículos dentro de una orden. Se determinó que un mismo artículo no debe poder repetirse dentro de una misma orden, por lo que se revisó el uso de la clave primaria y la posibilidad de utilizar una clave compuesta o una restricción UNIQUE para garantizar esta regla.
+
+ Problemas o dificultades identificadas
+
+La principal dificultad fue diferenciar entre una clave que identifica individualmente un registro y una restricción que representa una regla del negocio. Se observó que utilizar solamente un identificador para el detalle de la orden no garantiza por sí mismo que un mismo artículo no pueda cargarse dos veces en la misma orden.
+
+ Soluciones o propuestas realizadas
+
+Propuse revisar la estructura de la tabla de detalle de la orden para que la combinación de Orden + Artículo sea la que determine la unicidad. De esta manera se evita la duplicación de un mismo artículo dentro de una orden y se mantiene la integridad de los datos.
+
+ Reflexión individual
+
+En esta etapa comprendí mejor la importancia de las claves primarias, claves compuestas y restricciones para representar correctamente las reglas de negocio. También entendí que no alcanza con que una tabla tenga un identificador único, sino que hay que analizar qué condiciones deben cumplirse para que los datos sean coherentes.
