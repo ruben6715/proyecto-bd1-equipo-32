@@ -1,0 +1,46 @@
+Equipo: 32 
+Integrante: Matias Luciano Romero
+Fecha:* 2026/09/30
+
+Diseño y estructuración del esquema DDL: Creación de las sentencias SQL para la generación de la base de datos FarmaBlue y la definición de sus tablas relacionales.
+
+Implementación de restricciones de integridad: Definición explícita de claves primarias (PRIMARY KEY),
+claves foráneas (FOREIGN KEY)  (ON UPDATE CASCADE, ON DELETE NO ACTION), restricciones de unicidad (UNIQUE) para CUIT, correos y matrículas, y validaciones de datos (CHECK).
+
+2. Decisiones en las que participe
+Indicar decisiones relacionadas con el dominio, alcance o reglas de negocio.
+
+Trazabilidad estricta de medicamentos vía Lotes: Se decidió desvincular la venta directa del Producto e interponer la entidad lote en detalle_venta,
+asegurando el control estricto de la fecha de vencimiento y el stock disponible por lote de origen.
+
+Reglas de negocio e integridad en el cliente: Inclusión del campo autorizacion_psicotropico y datos de habilitación sanitaria (matricula_habilitacion_sanitaria, 
+fecha_vencimiento_habilitacion) para restringir la venta de medicamentos controlados a entidades autorizadas.
+
+Desvinculación del catálogo respecto a compras y ventas: El catálogo de productos actúa como entidad central compartida entre los proveedores (compra / detalle_compra) y el inventario disponible (lote / detalle_venta).
+
+3. Problemas o dificultades identificadas
+Describir dificultades encontradas durante el desarrollo.
+
+Gestión de la integridad referencial cíclica o en cascada: Dificultad para definir la estrategia de borrado/actualización de claves foráneas
+(ON DELETE NO ACTION vs ON DELETE CASCADE) sin generar conflictos de eliminación en cascada circular entre clientes, ventas, lotes y productos.
+
+Coherencia y consistencia de datos numéricos DML: Desafío al calcular manualmente montos de subtotal, descuentos, impuestos (IVA 21%) 
+y montos totales en la tabla venta para que coincidan numéricamente con los registros de detalle_venta.
+
+4. Soluciones o propuestas realizadas
+Explicar brevemente cómo se resolvieron o propusieron resolver las dificultades.
+
+Configuración segura de FK: Se optó de manera preventiva por utilizar ON DELETE NO ACTION junto con ON UPDATE CASCADE 
+en todas las relaciones para proteger la persistencia de datos históricos (evitando que al borrar un cliente o producto se elimine su historial de ventas o compras).
+
+Validación de consistencia DML: Se utilizaron scripts complementarios de verificación mediante sentencias SELECT con JOIN y agregaciones (SUM) 
+para corroborar que los totales de la tabla venta reflejaran exactamente el cálculo de cantidad * precio_unitario_historico de sus detalles.
+
+5. Evidencias en the repositorio
+Indicar los archivos, commits, issues o pull requests relacionados con el aporte.
+
+6. Reflexión 
+Comprendí la importancia práctica de aplicar correctamente la Tercera Forma Normal (3FN) para evitar redundancias,
+así como el uso estratégico de claves primarias, foráneas, restricciones de unicidad (UNIQUE) y de verificación (CHECK). 
+Asimismo, afiancé el manejo del Lenguaje de Definición de Datos (DDL) y del Lenguaje de Manipulación de Datos (DML) en SQL Server, 
+comprendiendo cómo decisiones de diseño a nivel de base de datos impactan directamente en las reglas de negocio de la aplicación.
