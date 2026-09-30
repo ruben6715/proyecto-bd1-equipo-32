@@ -1,0 +1,18 @@
+informe de Transición: Del Modelo Conceptual al Modelo Físico (SQL Server) para FarmaBlue
+1. Introducción y Contexto
+El presente documento describe el proceso metodológico mediante el cual se transformó el diagrama conceptual/lógico (basado en el modelo relacional representado en la herramienta ERDPlus) hacia el script de implementación física en Microsoft SQL Server para el sistema de gestión FarmaBlue.
+El objetivo principal de esta transición fue traducir las entidades, atributos, dominios y relaciones del diseño lógico en estructuras de bases de datos relacionales eficientes, asegurando la integridad referencial, la atomicidad de las operaciones y las restricciones del negocio farmacéutico.
+
+
+
+2. Decisiones Técnicas y Restricciones de Integridad
+Durante la fase de paso al modelo físico en SQL Server, se aplicaron los siguientes criterios de ingeniería de bases de datos:
+Claves Primarias Autoincreméntales (IDENTITY): Todas las tablas utilizan claves primarias numéricas enteras con la propiedad IDENTITY(1,1), asegurando identificadores únicos y secuenciales generados de forma automática por el motor de base de datos.
+Integridad Referencial (Foreign Keys): Se establecieron relaciones estrictas entre las tablas mediante FOREIGN KEY. Se configuró la política ON DELETE NO ACTION para prevenir la eliminación accidental de registros maestros (como un cliente con ventas históricas o un producto con lotes activos) y ON UPDATE CASCADE para mantener la coherencia si una clave principal llegase a modificarse.
+Tipos de Datos Optimizados:
+Se usó DECIMAL(10,2) para importes monetarios, precios unitarios y límites de crédito, evitando los errores de redondeo típicos de los tipos de coma flotante (FLOAT).
+Se empleó DATETIME y DATE para el manejo preciso de fechas de emisión, entrega y vencimiento de medicamentos.
+Se utilizaron restricciones DEFAULT (como GETDATE() para la hora de venta o 0 para los booleanos y límites de crédito) para agilizar las inserciones de datos y mantener consistencia por defecto.
+
+3. Conclusión
+El pasaje del modelo conceptual al script SQL físico se ejecutó aplicando los principios de normalización relacional (evitando redundancias en domicilios y catálogos), asegurando el cumplimiento de las restricciones del dominio farmacéutico (trazabilidad por lotes, control de psicotrópicos y cadena de frío mediante atributos lógicos) y garantizando la robustez transaccional mediante restricciones de integridad (UNIQUE, CHECK, FOREIGN KEY).
