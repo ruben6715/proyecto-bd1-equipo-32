@@ -110,3 +110,10 @@ EXEC dbo.sp_RegistrarVentaCompleta
     @IdLote = 1, 
     @Cantidad = 2;
 GO
+--c .Probar el stock insuficiente
+EXEC dbo.sp_RegistrarVentaCompleta 
+    @NumeroComprobante = 5555, 
+    @IdMetodoPago = 1, 
+    @CodigoCliente = 1, 
+    @IdLote = 1,          -- Lote 1
+    @Cantidad = 9999;     -- Pides más de lo que hay en stock para forzar el error
