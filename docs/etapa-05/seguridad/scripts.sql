@@ -130,10 +130,7 @@ SELECT Razon_social, limite_credito FROM cliente;
 REVERT;
 GO
 
--- ============================================================
--- LIMPIEZA (ejecutar solo si querés repetir la demostración)
--- ============================================================
-/*
+
 DELETE FROM venta WHERE numero_comprobante >= 1011;
 
 ALTER ROLE db_owner DROP MEMBER usuario_admin;
