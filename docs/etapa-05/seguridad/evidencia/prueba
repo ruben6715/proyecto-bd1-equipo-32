@@ -1,1 +1,65 @@
+Creación de objetos
 
+Cada bloque de CREATE (procedimiento, logins, usuarios, roles) y de permisos (GRANT, DENY, ALTER ROLE) muestra:
+
+Comandos completados correctamente.
+Prueba 1: INSERT directo con usuario_admin (CORRECTO)
+(1 fila afectada)
+
+Se inserta la venta 9001.
+
+Prueba 2: INSERT directo con usuario_lector (DENEGADO)
+Mensaje 229, nivel 14, estado 5, línea 2
+Se denegó el permiso INSERT en el objeto 'venta', base de datos 'FarmaBlue', esquema 'dbo'.
+
+No se inserta nada.
+
+Prueba 3: usuario_lector usa el procedimiento (CORRECTO)
+(1 fila afectada)
+
+El procedimiento calcula el comprobante (9001 + 1 = 9002), el impuesto (15000 × 0,21 = 3150) y el total (18150).
+
+Consulta de verificación
+numero_comprobante	monto_subtotal	monto_total	estado_venta
+9002	15000.00	18150.00	Pendiente
+9001	15000.00	18150.00	Pendiente
+1010	21000.00	25410.00	Facturado
+
+La 9002 es la que registró usuario_lector a través del procedimiento. La 9001 es la del admin. Se ve que el intento directo del lector (la prueba 2) no dejó ningún registro.
+
+Prueba 4: usuario_con_rol consulta Producto (CORRECTO)
+nombre_comercial	precio_unidad_actual
+Ibuprofeno 600mg Pharma	1250.50
+Paracetamol 1g Farma	980.00
+Amoxicilina 500mg Duo	2400.00
+Alprazolam 1mg Sanitas	3100.00
+Clonazepam 2mg Sedat	3450.00
+Prueba 5: usuario_sin_rol consulta Producto (DENEGADO)
+Mensaje 229, nivel 14, estado 5, línea 2
+Se denegó el permiso SELECT en el objeto 'Producto', base de datos 'FarmaBlue', esquema 'dbo'.
+Prueba 6: usuario_vendedor consulta columnas permitidas (CORRECTO)
+Razon_social	telefono	correo
+Farmacia Central S.R.L.	4411223	contacto@farmaciacentral.com
+Farmacia San Roque S.A.	4422334	pedidos@farmaciasanroque.com
+Farmacia Uno S.H.	4433445	compras@farmauno.com.ar
+...	...	...
+
+Devuelve las 10 filas de clientes.
+
+Prueba 7: usuario_vendedor consulta limite_credito (DENEGADO)
+Mensaje 230, nivel 14, estado 1, línea 2
+Se denegó el permiso SELECT en la columna 'limite_credito' del objeto 'cliente', base de datos 'FarmaBlue', esquema 'dbo'.
+
+Es el error 230 (columna) y no el 229 (tabla): el vendedor sí tiene acceso a cliente, pero esa columna está bloqueada.
+
+Resumen para el informe
+Prueba	Usuario	Acción	Resultado
+1	usuario_admin	INSERT directo en venta	Correcto
+2	usuario_lector	INSERT directo en venta	Error 229
+3	usuario_lector	EXEC sp_RegistrarVentaSimple	Correcto
+4	usuario_con_rol	SELECT en Producto	Correcto
+5	usuario_sin_rol	SELECT en Producto	Error 229
+6	usuario_vendedor	SELECT en columnas permitidas de cliente	Correcto
+7	usuario_vendedor	SELECT de limite_credito	Error 230
+
+Los números de línea de los errores y los id_venta pueden variar en tu ejecución. Lo que tiene que coincidir es qué pruebas funcionan y cuáles dan error.
