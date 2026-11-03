@@ -1,1 +1,94 @@
+USE FarmaBlue;
+GO
 
+-- ============================================================================
+-- SCRIPT DE TRANSACCIÓN: Venta con control de stock (FarmaBlue)
+-- ============================================================================
+
+-- Declaración de variables para simular la compra de 5 unidades de un producto de un lote
+DECLARE @id_lote_objetivo INT = 1;          -- ID del lote del producto a vender
+DECLARE @cantidad_a_comprar INT = 5;        -- Cantidad solicitada (5 unidades)
+DECLARE @codigo_cliente_venta INT = 1;      -- Código del cliente registrado
+DECLARE @id_metodo_pago_venta INT = 1;      -- Método de pago utilizado
+DECLARE @nro_comprobante INT = 1011;        -- Número de comprobante único
+
+-- Variables auxiliares de control
+DECLARE @stock_actual INT;
+DECLARE @precio_actual DECIMAL(10,2);
+
+BEGIN TRANSACTION;
+
+-- 1. Consultar el stock disponible y el precio actual del producto a través de su lote
+SELECT 
+    @stock_actual = l.stock_disponible,
+    @precio_actual = p.precio_unidad_actual
+FROM lote l
+INNER JOIN Producto p ON l.id_producto = p.id_producto
+WHERE l.id_lote = @id_lote_objetivo;
+
+-- 2. Validar si existe stock suficiente en el lote
+IF @stock_actual < @cantidad_a_comprar
+BEGIN
+    -- Si no hay stock suficiente, cancelamos todo (No se registra nada)
+    PRINT 'Error: Stock insuficiente en el lote. Ejecutando ROLLBACK: No se registra la venta ni se modifica el stock.';
+    ROLLBACK TRANSACTION;
+END
+ELSE
+BEGIN
+    -- Si hay stock suficiente, calculamos montos y ejecutamos las operaciones:
+    DECLARE @subtotal DECIMAL(10,2) = @cantidad_a_comprar * @precio_actual;
+    DECLARE @descuento DECIMAL(10,2) = 0.00;
+    DECLARE @impuesto DECIMAL(10,2) = @subtotal * 0.21; -- Cálculo de impuesto estimativo (21%)
+    DECLARE @total DECIMAL(10,2) = @subtotal - @descuento + @impuesto;
+
+    -- A. Crear la venta (Cabecera)
+    INSERT INTO venta (
+        numero_comprobante, 
+        fecha_Hora, 
+        monto_subtotal, 
+        monto_Descuento, 
+        monto_Impuesto, 
+        monto_total, 
+        estado_venta, 
+        id_metodoPago, 
+        Codigo_Cliente
+    ) 
+    VALUES (
+        @nro_comprobante, 
+        GETDATE(), 
+        @subtotal, 
+        @descuento, 
+        @impuesto, 
+        @total, 
+        'Entregado', 
+        @id_metodo_pago_venta, 
+        @codigo_cliente_venta
+    );
+
+    -- Obtenemos el ID de la venta recién insertada de manera automática
+    DECLARE @id_venta_generada INT = SCOPE_IDENTITY();
+
+    -- B. Crear el detalle de la venta (vinculando el lote y el precio histórico)
+    INSERT INTO detalle_venta (
+        cantidad, 
+        precio_unitario_historico, 
+        id_lote, 
+        id_venta
+    ) 
+    VALUES (
+        @cantidad_a_comprar, 
+        @precio_actual, 
+        @id_lote_objetivo, 
+        @id_venta_generada
+    );
+
+    -- C. Descontar el stock disponible del lote correspondiente
+    UPDATE lote 
+    SET stock_disponible = stock_disponible - @cantidad_a_comprar 
+    WHERE id_lote = @id_lote_objetivo;
+
+    -- Si todo salió bien, confirmamos la transacción de forma permanente
+    COMMIT TRANSACTION;
+    PRINT 'Éxito: Venta registrada, detalle creado y stock actualizado correctamente.';
+END
+GO
