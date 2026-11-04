@@ -79,7 +79,7 @@ El desarrollo del proyecto se divide en las siguientes fases y documentos clave:
     * [📄 Informe de la etapa 3](./docs/etapa-03/informe%20de%20etapa%203)
   * [📁 Etapa 4](./docs/etapa-04/)
     * [📁 Manifiestos individuales](./docs/etapa-04/Manifiestos%20individuales/)
-    * [📄 Informe de la etapa 4](./docs/etapa-04/informe%20de%20etapa%204)
+    * [📄 Informe de la etapa 4](./docs/etapa-04/informe%20de%20etapa%204.md)
   * [📁 Etapa 5](./docs/etapa-05/)
     * [📁 Manifiestos individuales](./docs/etapa-05/Manifiesto_Etapa_5)
     * [📁 Optimización de consultas](./docs/etapa-05/Optimización%20de%20consultas)
