@@ -1,6 +1,4 @@
-# FarmaBlue – Etapa IV: Consultas y Casos de Uso
-
-Equipo 32 · Bases de Datos I · SQL Server (SSMS)
+# Etapa IV: Consultas y Casos de Uso
 
 ## Introducción
 
