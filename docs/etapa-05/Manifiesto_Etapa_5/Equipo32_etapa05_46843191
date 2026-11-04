@@ -1,0 +1,28 @@
+# Contribución individual -- Etapa 05
+**Equipo:** 32
+**Integrante:** Valentino Greatti
+**Fecha:** 2026-11-03
+
+## 1. Aporte realizado
+En esta etapa me encargué de investigar y desarrollar la optimización de consultas a través de índices para el sistema FarmaBlue. Para evaluar el rendimiento, creé una tabla histórica de lotes e inventario y realicé una carga masiva de datos simulando un volumen operativo real de un millón de registros. Primero ejecuté consultas de control de stock y vencimientos (modalidad FEFO) sin índices para medir el impacto de un escaneo completo de tabla (*Table Scan*). Luego, diseñé e implementé un índice no agrupado con cobertura (*Covering Index*) incluyendo las columnas proyectadas clave, lo que permitió que el motor resolviera las consultas de forma directa mediante un *Index Seek* y redujera drásticamente las lecturas lógicas y el tiempo de respuesta.
+
+## 2. Decisiones en las que participé
+- Decidimos utilizar un enfoque de índice de cobertura con la cláusula `INCLUDE` para el módulo de logística FEFO, evitando así costosos accesos adicionales a la tabla (*Key Lookup*) al consultar fechas de vencimiento y stock disponible.
+- Definimos estructurar la prueba de rendimiento con un volumen masivo de un millón de registros para reflejar de forma realista el comportamiento del motor SQL Server Express ante tablas volumétricas de la droguería.
+
+## 3. Problemas o dificultades identificadas
+- Al principio, las consultas sobre rangos de fechas de vencimiento en tablas grandes generaban un alto costo de E/S y un tiempo de CPU elevado debido a que el motor debía recorrer fila por fila (*Table Scan*).
+- Era necesario asegurar que el índice no solo apuntara a la fecha de vencimiento, sino que también incluyera los datos más consultados del lote para que el plan de ejecución fuera óptimo y evitara lecturas innecesarias en el disco principal.
+
+## 4. Soluciones o propuestas realizadas
+- Implementé estadísticas de rendimiento en tiempo de ejecución (`SET STATISTICS TIME ON` y `SET STATISTICS IO ON`) para medir con precisión milimétrica las lecturas lógicas y el tiempo de CPU antes y después de aplicar las mejoras.
+- Creé y documenté un script SQL estructurado en partes claras que demuestra paso a paso la transición desde un rendimiento ineficiente hasta una búsqueda optimizada con *Index Seek*.
+- Generé capturas de pantalla de la ejecución correcta en el entorno de desarrollo y las organicé en la carpeta de evidencias del repositorio.
+
+## 5. Evidencias en el repositorio
+- [investigacion sobre optimizacion de consultas](/docs/etapa-05/Optimizacion%20de%20consultas/Investigacion.md)
+- [script sql de optimizacion e indices](/docs/etapa-05/Optimizacion%20de%20consultas/script.sql)
+- [capturas de evidencias del funcionamiento](/docs/etapa-05/Optimizacion%20de%20consultas/evidencias/)
+
+## 6. Reflexión individual
+Trabajar en esta etapa me permitió comprender a fondo la importancia de los índices y las estructuras de árboles balanceados B-Tree en las bases de datos relacionales. Comprendí que a medida que un sistema como FarmaBlue escala y acumula transacciones diarias, una consulta mal indexada puede degradar por completo el rendimiento general de la aplicación. Ver el cambio en el plan de ejecución de un *Table Scan* a un *Index Seek* me dio una visión mucho más técnica y práctica de cómo optimizar el acceso a los datos de manera eficiente.
