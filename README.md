@@ -36,7 +36,8 @@ proyecto-bd1-equipo-32/
 │   ├── ETAPA-01/
 │   ├── ETAPA-02/
 │   ├── ETAPA-03/
-│   └── ETAPA-04/
+│   ├── ETAPA-04/
+│   ├── ETAPA-05/   
 ├── sql/
 │   ├── técnico/
 │   ├── dml/
@@ -78,7 +79,14 @@ El desarrollo del proyecto se divide en las siguientes fases y documentos clave:
     * [📄 Informe de la etapa 3](./docs/etapa-03/informe%20de%20etapa%203)
   * [📁 Etapa 4](./docs/etapa-04/)
     * [📁 Manifiestos individuales](./docs/etapa-04/Manifiestos%20individuales/)
+    * [📄 Informe de la etapa 4](./docs/etapa-04/informe%20de%20etapa%204)
   * [📁 Etapa 5](./docs/etapa-05/)
+    * [📁 Manifiestos individuales](./docs/etapa-05/Manifiesto_Etapa_5)
+    * [📁 Optimización de consultas](./docs/etapa-05/Optimización%20de%20consultas)
+    * [📁 Procedimientos funciones](./docs/etapa-05/procedimientos_funciones)
+    * [📁 Seguridad](./docs/etapa-05/seguridad)
+    * [📁 Transacciones](./docs/etapa-05/transacciones)
+    * [📁 Triggers auditoría](./docs/etapa-05/triggers_auditoria)
 * [📁 SQL](./sql/)
   * [📁 Técnico](./sql/técnico/)
   * [📁 DML](./sql/dml/)
