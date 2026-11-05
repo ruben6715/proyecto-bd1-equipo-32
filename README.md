@@ -16,8 +16,7 @@
 > Este repositorio contiene el proyecto de diseño, modelado e implementación de la base de datos relacional para la gestión operativa, de inventario y comercial de la droguería FarmaBlue.
 ---
 
-## 🏢 1.Descripción del proyecto  
-#### ETAPA 1:
+## 🏢 Descripción del proyecto  
 La *Droguería "Distribuidora FarmaBlue"* se especializa en la venta y distribución al por mayor de medicamentos, insumos médicos y productos de perfumería destinados a farmacias y centros de salud.  
 El sistema abarca los siguientes módulos principales:
 
@@ -60,7 +59,10 @@ El desarrollo del proyecto se divide en las siguientes fases y documentos clave:
 *Descripción:*  El diseño incluye la creación de la estructura relacional, la restricción de integridad de datos, la carga de datos iniciales y objetos de programabilidad.
 
 4. **Consultas:**  
-*Descripción:* En esta etapa se diseñaron e implementaron consultas SQL avanzadas para resolver las operaciones cotidianas y los requerimientos de reporte de la droguería..
+*Descripción:* En esta etapa se diseñaron e implementaron consultas SQL avanzadas para resolver las operaciones cotidianas y los requerimientos de reporte de la droguería.
+
+5. **Temas técnicos:**  
+*Descripción:* En esta etapa se implementaron procedimientos y funciones almacenadas, manejo de transacciones, triggers de auditoría, medidas de seguridad (usuarios y permisos) y la optimización de consultas para mejorar el rendimiento del sistema.
 
 
 
